@@ -260,6 +260,7 @@ app.post("/api/requests/reject", requireRole("admin"), (req, res) => {
   writeJSON(FILES.requests, requests);
   res.json({ success: true });
 });
+app.use(express.static("public"));
 
 // ---------- Server ----------
 app.listen(PORT, () => console.log(`✅ Server running on http://localhost:${PORT}`));
