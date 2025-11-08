@@ -1,1 +1,11 @@
+CREATE TABLE books (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  title TEXT NOT NULL,
+  author TEXT NOT NULL
+);
+
+INSERT INTO books (title, author) VALUES
+('Data Structures', 'Reema Thareja'),
+('Artificial Intelligence', 'Stuart Russell'),
+('Database Systems', 'Raghu Ramakrishnan');
 
