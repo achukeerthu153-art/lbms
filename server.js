@@ -1,57 +1,31 @@
-
-// server.js
 const express = require("express");
-const sqlite3 = require("sqlite3").verbose();
 const path = require("path");
+const sqlite3 = require("sqlite3").verbose();
 
 const app = express();
+const PORT = process.env.PORT || 3000;
 
-// Middleware
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.static(path.join(__dirname, "public")));
 
-// Connect to SQLite database (stored locally)
-const dbPath = path.join(__dirname, "library.db");
-const db = new sqlite3.Database(dbPath, (err) => {
-  if (err) {
-    console.error("❌ Error connecting to database:", err);
-  } else {
-    console.log("✅ Connected to SQLite database");
-  }
+const db = new sqlite3.Database(path.join(__dirname, "library.db"), (err) => {
+  if (err) console.error("Database connection error:", err);
+  else console.log("Connected to SQLite database.");
 });
 
-// Example route: Home
 app.get("/", (req, res) => {
-  res.send("<h2>📚 Library Management System Backend (Vercel Serverless)</h2>");
+  res.send("📚 Library Management System Backend (Vercel Serverless)");
 });
 
-// Example route: Get all books
 app.get("/api/books", (req, res) => {
   db.all("SELECT * FROM books", [], (err, rows) => {
-    if (err) {
-      res.status(500).json({ error: err.message });
-    } else {
-      res.json({ books: rows });
-    }
+    if (err) return res.status(500).json({ error: err.message });
+    res.json(rows);
   });
 });
 
-// Example route: Add a new book
-app.post("/api/books", (req, res) => {
-  const { title, author, year } = req.body;
-  if (!title || !author) {
-    return res.status(400).json({ error: "Missing title or author" });
-  }
-
-  const query = "INSERT INTO books (title, author, year) VALUES (?, ?, ?)";
-  db.run(query, [title, author, year], function (err) {
-    if (err) {
-      res.status(500).json({ error: err.message });
-    } else {
-      res.json({ message: "✅ Book added successfully", id: this.lastID });
-    }
-  });
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });
 
-// Export the app (Vercel handles app.listen)
-module.exports = app;
+module.exports = app; // Required for Vercel
