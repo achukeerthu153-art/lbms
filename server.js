@@ -1,7 +1,7 @@
 // server.js
-// Run: npm init -y && npm install express express-session
+// Run locally: npm init -y && npm install express express-session
 // Then: node server.js
-// Open in browser: http://localhost:5000
+// Local URL: http://localhost:5000
 
 const express = require("express");
 const session = require("express-session");
@@ -11,7 +11,7 @@ const path = require("path");
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// ---------- Helpers ----------
+// ---------- Setup ----------
 const DATA_DIR = path.join(__dirname, "data");
 if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR);
 
@@ -38,13 +38,14 @@ function today() {
   return new Date().toISOString().slice(0, 10);
 }
 
-// ---------- Seed Data ----------
+// ---------- Initial Data ----------
 if (!fs.existsSync(FILES.users)) {
   writeJSON(FILES.users, [
     { id: 1, username: "admin", password: "admin123", role: "admin" },
     { id: 2, username: "student1", password: "stud123", role: "student" },
   ]);
 }
+
 if (!fs.existsSync(FILES.books)) {
   writeJSON(FILES.books, [
     { id: 1, title: "Clean Code", author: "Robert C. Martin", available: 3 },
@@ -52,11 +53,13 @@ if (!fs.existsSync(FILES.books)) {
     { id: 3, title: "The Pragmatic Programmer", author: "Andrew Hunt", available: 1 },
   ]);
 }
+
 if (!fs.existsSync(FILES.issued)) writeJSON(FILES.issued, []);
 if (!fs.existsSync(FILES.requests)) writeJSON(FILES.requests, []);
 
 // ---------- Middleware ----------
 app.use(express.json());
+app.use(express.static(path.join(__dirname, "public")));
 app.use(
   session({
     secret: "lms-secret-xyz",
@@ -65,13 +68,13 @@ app.use(
     cookie: { maxAge: 1000 * 60 * 60 * 8 }, // 8 hours
   })
 );
-app.use(express.static(path.join(__dirname, "public")));
 
 // ---------- Auth Helpers ----------
 function requireLogin(req, res, next) {
   if (!req.session.user) return res.status(401).json({ error: "Not logged in" });
   next();
 }
+
 function requireRole(role) {
   return (req, res, next) => {
     if (!req.session.user || req.session.user.role !== role)
@@ -115,9 +118,7 @@ app.post("/logout", (req, res) => req.session.destroy(() => res.json({ success: 
 app.get("/whoami", (req, res) => res.json({ user: req.session.user || null }));
 
 // ---------- Books ----------
-app.get("/api/books", requireLogin, (req, res) => {
-  res.json(readJSON(FILES.books));
-});
+app.get("/api/books", requireLogin, (req, res) => res.json(readJSON(FILES.books)));
 
 app.post("/api/books", requireRole("admin"), (req, res) => {
   const { title, author, available } = req.body;
@@ -146,9 +147,7 @@ app.delete("/api/books/:id", requireRole("admin"), (req, res) => {
 // ---------- Student ----------
 app.get("/api/mybooks", requireRole("student"), (req, res) => {
   const issued = readJSON(FILES.issued);
-  const mine = issued.filter(
-    i => i.username === req.session.user.username && !i.return_date
-  );
+  const mine = issued.filter(i => i.username === req.session.user.username && !i.return_date);
   res.json(mine);
 });
 
@@ -210,9 +209,7 @@ app.get("/api/requests", requireRole("admin"), (req, res) => {
   res.json(readJSON(FILES.requests).filter(r => r.status === "pending"));
 });
 
-app.get("/api/issued", requireRole("admin"), (req, res) => {
-  res.json(readJSON(FILES.issued));
-});
+app.get("/api/issued", requireRole("admin"), (req, res) => res.json(readJSON(FILES.issued)));
 
 app.post("/api/requests/approve", requireRole("admin"), (req, res) => {
   const { requestId } = req.body;
@@ -260,7 +257,15 @@ app.post("/api/requests/reject", requireRole("admin"), (req, res) => {
   writeJSON(FILES.requests, requests);
   res.json({ success: true });
 });
-app.use(express.static("public"));
 
-// ---------- Server ----------
-app.listen(PORT, () => console.log(`✅ Server running on http://localhost:${PORT}`));
+// ---------- Fallback ----------
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "index.html"));
+});
+
+// ---------- Start ----------
+app.listen(PORT, () =>
+  console.log(`✅ Server running locally at http://localhost:${PORT}`)
+);
+
+module.exports = app;
