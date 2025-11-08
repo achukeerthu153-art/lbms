@@ -1,20 +1,191 @@
+/* ------------------------------
+   Library Management System UI
+   Clean + Futuristic Glass Style
+---------------------------------*/
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+
 body {
-  font-family: Arial, sans-serif;
+  background: linear-gradient(135deg, #1f1f1f, #2b2b2b, #111);
+  color: #fff;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+/* ---------- Container ---------- */
+.container {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+  backdrop-filter: blur(10px);
+  padding: 40px;
+  width: 100%;
+  max-width: 450px;
   text-align: center;
-  margin-top: 50px;
-  background-color: #f4f4f4;
+  animation: fadeIn 0.6s ease-in-out;
 }
-h1 {
-  color: #333;
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
 }
+
+/* ---------- Headings ---------- */
+h1, h2, h3 {
+  color: #f3f3f3;
+  margin-bottom: 15px;
+  letter-spacing: 0.5px;
+}
+
+/* ---------- Inputs ---------- */
+input, select {
+  width: 100%;
+  padding: 10px 15px;
+  margin: 8px 0 15px 0;
+  border: none;
+  border-radius: 8px;
+  outline: none;
+  background: rgba(255, 255, 255, 0.15);
+  color: #fff;
+  font-size: 15px;
+  transition: background 0.3s, box-shadow 0.3s;
+}
+
+input:focus, select:focus {
+  background: rgba(255, 255, 255, 0.25);
+  box-shadow: 0 0 8px rgba(0, 255, 200, 0.3);
+}
+
+/* ---------- Buttons ---------- */
 button {
-  background-color: #007bff;
-  color: white;
-  padding: 10px 20px;
+  width: 100%;
+  padding: 10px 15px;
+  background: linear-gradient(135deg, #00ffd5, #0077ff);
+  color: #111;
   border: none;
   border-radius: 8px;
   cursor: pointer;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  transition: all 0.3s ease;
 }
+
 button:hover {
-  background-color: #0056b3;
+  background: linear-gradient(135deg, #00ffa1, #00bfff);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(0, 255, 255, 0.3);
+}
+
+/* ---------- Tables ---------- */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+th, td {
+  padding: 10px;
+  text-align: left;
+}
+
+th {
+  background: rgba(255, 255, 255, 0.15);
+  color: #00fff2;
+  text-transform: uppercase;
+  font-size: 13px;
+  letter-spacing: 1px;
+}
+
+tr:nth-child(even) {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* ---------- Alerts / Messages ---------- */
+.alert {
+  background: rgba(255, 0, 0, 0.2);
+  color: #ff9f9f;
+  padding: 10px;
+  margin: 10px 0;
+  border-radius: 8px;
+  display: none;
+}
+
+.success {
+  background: rgba(0, 255, 150, 0.2);
+  color: #00ffbf;
+}
+
+/* ---------- Links ---------- */
+a {
+  color: #00ffe0;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+a:hover {
+  color: #00bfff;
+  text-decoration: underline;
+}
+
+/* ---------- Dashboard Layout ---------- */
+.dashboard {
+  width: 90%;
+  max-width: 1000px;
+  margin: auto;
+}
+
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.dashboard-header h2 {
+  color: #00fff2;
+}
+
+.dashboard-header button {
+  width: auto;
+  padding: 8px 20px;
+}
+
+/* ---------- Cards (for book list / requests) ---------- */
+.card {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 20px;
+  margin: 15px 0;
+  transition: transform 0.3s, background 0.3s;
+}
+
+.card:hover {
+  background: rgba(255, 255, 255, 0.15);
+  transform: translateY(-4px);
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 600px) {
+  .container, .dashboard {
+    width: 100%;
+    padding: 20px;
+  }
+
+  table, th, td {
+    font-size: 13px;
+  }
 }
