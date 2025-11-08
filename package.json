@@ -1,24 +1,13 @@
 {
   "name": "lbms",
   "version": "1.0.0",
-  "description": "Library Management System backend (Express + SQLite + Vercel)",
+  "description": "Library Management System",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/achukeerthu153-art/lbms.git"
-  },
-  "keywords": ["library", "express", "sqlite", "vercel"],
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/achukeerthu153-art/lbms/issues"
-  },
-  "homepage": "https://github.com/achukeerthu153-art/lbms#readme",
   "dependencies": {
-    "express": "^4.18.2",
+    "express": "^5.1.0",
     "sqlite3": "^5.1.6"
   }
 }
